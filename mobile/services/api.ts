@@ -70,10 +70,17 @@ class ApiClient {
       formData.append("voice_id", voiceId);
     }
 
-    const res = await fetch(`${this.baseUrl}/translate`, {
-      method: "POST",
-      body: formData,
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${this.baseUrl}/translate`, {
+        method: "POST",
+        body: formData,
+      });
+    } catch (networkErr: any) {
+      throw new Error(
+        `Cannot reach backend at ${this.baseUrl}. Make sure the server is running. (${networkErr.message})`
+      );
+    }
 
     if (!res.ok) {
       const err = await res.json();

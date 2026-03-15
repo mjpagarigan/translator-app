@@ -15,7 +15,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.voicebridge.app",
       "infoPlist": {
-        "NSMicrophoneUsageDescription": "VoiceBridge needs access to your microphone for voice translation."
+        "NSMicrophoneUsageDescription": "VoiceBridge needs access to your microphone for voice translation.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        }
       }
     },
     "android": {

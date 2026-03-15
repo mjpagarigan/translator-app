@@ -36,6 +36,16 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
         if (!granted) return;
       }
 
+      // Stop and unload any existing recording before creating a new one
+      if (recordingRef.current) {
+        try {
+          await recordingRef.current.stopAndUnloadAsync();
+        } catch {
+          // Already stopped — ignore
+        }
+        recordingRef.current = null;
+      }
+
       await configureAudio();
 
       const recording = new Audio.Recording();

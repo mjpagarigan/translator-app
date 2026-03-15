@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 // Use localhost for web, machine IP for native devices
 const DEV_HOST = Platform.select({
   web: "localhost",
-  default: "192.168.1.100", // Change to your machine's local IP
+  default: "192.168.86.25", // Your machine's local IP
 });
 
 export const API_BASE_URL =
