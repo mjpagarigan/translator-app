@@ -4,7 +4,7 @@ python-multipart==0.0.9
 openai-whisper==20231117
 transformers==4.44.0
 sentencepiece==0.2.0
-torch==2.3.0
+torch==2.2.2
 elevenlabs==1.5.0
 pydub==0.25.1
 soundfile==0.12.1
