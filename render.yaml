@@ -1,0 +1,39 @@
+# Render Blueprint for the VoiceBridge backend.
+# Apply via Render dashboard → Blueprints → New Blueprint Instance,
+# or follow the manual UI walkthrough in RENDER_DEPLOYMENT.md.
+#
+# Plan: Whisper-base (~290 MB resident) + NLLB-200-distilled-600M (~2.4 GB)
+# + FastAPI/Torch overhead exceeds the 2 GB Standard plan, so Pro (4 GB) is
+# the smallest size that boots without OOM.
+
+services:
+  - type: web
+    name: voicebridge-backend
+    runtime: docker
+    plan: pro                       # 4 GB RAM, 2 vCPU — required for NLLB-200
+    region: oregon                  # change to your nearest region if needed
+    rootDir: backend
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      # PORT is injected by Render at runtime — do NOT set it here.
+      - key: DEVICE
+        value: cpu
+      - key: WHISPER_MODEL_SIZE
+        value: base
+      - key: MAX_AUDIO_DURATION
+        value: "30"
+      - key: CORS_ORIGINS
+        value: "*"                  # tighten to your mobile origin before public launch
+      - key: DATA_DIR
+        value: /app/data            # mounted disk below; survives redeploys
+      - key: ELEVENLABS_API_KEY
+        sync: false                 # set in the Render dashboard, not in git
+    disk:
+      name: voicebridge-data
+      mountPath: /app/data
+      sizeGB: 1                     # cloned-voice metadata only; tiny file

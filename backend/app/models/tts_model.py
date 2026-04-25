@@ -3,16 +3,21 @@
 import io
 import json
 import logging
-import os
 from pathlib import Path
 
-from app.config import ELEVENLABS_API_KEY
+from app.config import DATA_DIR, ELEVENLABS_API_KEY
 from app.services.language_map import is_tts_supported, get_elevenlabs_code
 
 logger = logging.getLogger(__name__)
 
 _client = None
-VOICES_FILE = Path(__file__).parent.parent.parent / "voices.json"
+if DATA_DIR:
+    DATA_PATH = Path(DATA_DIR)
+    DATA_PATH.mkdir(parents=True, exist_ok=True)
+else:
+    DATA_PATH = Path(__file__).parent.parent.parent
+
+VOICES_FILE = DATA_PATH / "voices.json"
 
 
 def init_client() -> None:
