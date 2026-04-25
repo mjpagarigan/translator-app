@@ -2,15 +2,16 @@
 # Apply via Render dashboard → Blueprints → New Blueprint Instance,
 # or follow the manual UI walkthrough in RENDER_DEPLOYMENT.md.
 #
-# Plan: Whisper-base (~290 MB resident) + NLLB-200-distilled-600M (~2.4 GB)
-# + FastAPI/Torch overhead exceeds the 2 GB Standard plan, so Pro (4 GB) is
-# the smallest size that boots without OOM.
+# WARNING: Standard plan = 2 GB RAM. NLLB-200-distilled-600M alone needs
+# ~2.4 GB at fp32, plus Whisper, FastAPI, Torch overhead. This config will
+# likely OOM on first model load. Use WHISPER_MODEL_SIZE=tiny + accept the
+# risk, or upgrade to plan: pro (4 GB) — see RENDER_DEPLOYMENT.md.
 
 services:
   - type: web
     name: voicebridge-backend
     runtime: docker
-    plan: pro                       # 4 GB RAM, 2 vCPU — required for NLLB-200
+    plan: standard                  # 2 GB RAM, 1 vCPU — likely OOMs on NLLB load
     region: oregon                  # change to your nearest region if needed
     rootDir: backend
     dockerfilePath: ./backend/Dockerfile
