@@ -15,6 +15,12 @@ WORKDIR /app
 RUN pip install --no-cache-dir torch==2.2.2 \
     --index-url https://download.pytorch.org/whl/cpu
 
+# openai-whisper==20231117's setup.py imports pkg_resources at the top, which
+# was removed from setuptools 81+. Pin the pip build-isolation env to a
+# setuptools that still ships pkg_resources so the wheel build succeeds.
+RUN echo "setuptools<81" > /tmp/pip-constraints.txt
+ENV PIP_CONSTRAINT=/tmp/pip-constraints.txt
+
 # Install remaining Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
