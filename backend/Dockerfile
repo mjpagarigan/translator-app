@@ -9,7 +9,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Install Python dependencies
+# Install CPU-only PyTorch first (CUDA wheel is ~2.5 GB and blows out the
+# Render build disk). The CPU wheel is ~200 MB and satisfies torch==2.2.2
+# in requirements.txt below.
+RUN pip install --no-cache-dir torch==2.2.2 \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
