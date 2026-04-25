@@ -14,8 +14,8 @@ services:
     plan: standard                  # 2 GB RAM, 1 vCPU — likely OOMs on NLLB load
     region: oregon                  # change to your nearest region if needed
     rootDir: backend
-    dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    dockerfilePath: ./Dockerfile     # relative to rootDir (= backend/)
+    dockerContext: .                 # relative to rootDir (= backend/)
     healthCheckPath: /health
     autoDeploy: true
     envVars:
